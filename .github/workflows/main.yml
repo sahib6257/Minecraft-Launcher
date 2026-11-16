@@ -24,19 +24,20 @@ jobs:
         run: |
           mkdir -p app_pojavlauncher/libs
           cd app_pojavlauncher/libs
-          wget https://github.com/PojavLauncherTeam/LTW/releases/latest/download/ltw-release.aar
+          wget -q https://github.com/PojavLauncherTeam/LTW/releases/latest/download/ltw-release.aar || true
 
-      - name: Get JRE 8, 17, and 21
+      - name: Get Latest JRE Releases
         run: |
           mkdir -p app_pojavlauncher/src/main/assets/components/jre
           mkdir -p app_pojavlauncher/src/main/assets/components/jre-new
           mkdir -p app_pojavlauncher/src/main/assets/components/jre-21
-          wget -O jre8.zip https://github.com/PojavLauncherTeam/android-openjdk-build-multiarch/releases/download/jre8-pojav/jre8-pojav.zip
-          unzip -q jre8.zip -d app_pojavlauncher/src/main/assets/components/jre
-          wget -O jre17.zip https://github.com/PojavLauncherTeam/android-openjdk-build-multiarch/releases/download/jre17-pojav/jre17-pojav.zip
-          unzip -q jre17.zip -d app_pojavlauncher/src/main/assets/components/jre-new
-          wget -O jre21.zip https://github.com/PojavLauncherTeam/android-openjdk-build-multiarch/releases/download/jre21-pojav/jre21-pojav.zip
-          unzip -q jre21.zip -d app_pojavlauncher/src/main/assets/components/jre-21
+          RELEASES=$(curl -s https://api.github.com/repos/PojavLauncherTeam/android-openjdk-build-multiarch/releases)
+          JRE8_URL=$(echo "$RELEASES" | grep -o 'https://[^"]*jre8-pojav\.zip' | head -n 1)
+          JRE17_URL=$(echo "$RELEASES" | grep -o 'https://[^"]*jre17-pojav\.zip' | head -n 1)
+          JRE21_URL=$(echo "$RELEASES" | grep -o 'https://[^"]*jre21-pojav\.zip' | head -n 1)
+          if [ -n "$JRE8_URL" ]; then wget -q -O jre8.zip "$JRE8_URL" && unzip -q jre8.zip -d app_pojavlauncher/src/main/assets/components/jre; fi
+          if [ -n "$JRE17_URL" ]; then wget -q -O jre17.zip "$JRE17_URL" && unzip -q jre17.zip -d app_pojavlauncher/src/main/assets/components/jre-new; fi
+          if [ -n "$JRE21_URL" ]; then wget -q -O jre21.zip "$JRE21_URL" && unzip -q jre21.zip -d app_pojavlauncher/src/main/assets/components/jre-21; fi
           rm -f jre8.zip jre17.zip jre21.zip
 
       - name: Setup Gradle
@@ -46,4 +47,25 @@ jobs:
 
       - name: Build JRE JAR files
         run: |
-        
+          chmod +x gradlew
+          chmod +x ./scripts/languagelist_updater.sh
+          ./scripts/languagelist_updater.sh
+          mkdir -p out
+          ./gradlew :jre_lwjgl3glfw:build --no-daemon
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build Debug APK
+        run: |
+          ./gradlew :app_pojavlauncher:assembleDebug --no-daemon
+          cp app_pojavlauncher/build/outputs/apk/debug/*.apk out/launcher-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-apk
+          path: out/launcher-debug.apk
