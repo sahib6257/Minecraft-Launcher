@@ -82,6 +82,19 @@ jobs:
                     "current_key": "AIzaSyDummyKeyForGitHubActionsBuild12345"
                   }
                 ]
+              },
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:123456789000:android:abcdef1234567890",
+                  "android_client_info": {
+                    "package_name": "${PKG}.debug"
+                  }
+                },
+                "api_key": [
+                  {
+                    "current_key": "AIzaSyDummyKeyForGitHubActionsBuild12345"
+                  }
+                ]
               }
             ],
             "configuration_version": "1"
