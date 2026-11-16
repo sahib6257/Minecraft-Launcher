@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/readme/logo.png" alt="CS Launcher Plus" width="140">
+<img src="assets/readme/logo.png" alt="Minecraft Launcher Plus" width="140">
 
-# CS Launcher Plus
+# Minecraft Launcher
 
 **Minecraft: Java Edition on Android — fast, modern, and now with two engines.**
 
