@@ -59,6 +59,35 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Generate dummy google-services.json
+        run: |
+          PKG=$(grep -E 'applicationId\s+["'\'']' app_pojavlauncher/build.gradle | head -n 1 | sed -E 's/.*["'\'']([^"'\'']+)["'\''].*/\1/')
+          cat <<EOF > app_pojavlauncher/google-services.json
+          {
+            "project_info": {
+              "project_number": "123456789000",
+              "project_id": "dummy-launcher-project",
+              "storage_bucket": "dummy-launcher-project.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:123456789000:android:1234567890abcdef",
+                  "android_client_info": {
+                    "package_name": "${PKG}"
+                  }
+                },
+                "api_key": [
+                  {
+                    "current_key": "AIzaSyDummyKeyForGitHubActionsBuild12345"
+                  }
+                ]
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
+
       - name: Build Debug APK
         run: |
           ./gradlew :app_pojavlauncher:assembleDebug --no-daemon
