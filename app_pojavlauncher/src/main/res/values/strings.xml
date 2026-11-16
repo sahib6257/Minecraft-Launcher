@@ -21,7 +21,7 @@
     <string name="alerttitle_installmod">Select a mod installer</string>
 
     <!-- Error messages -->
-    <string name="error_fatal">CS LAUNCHER PLUS has unexpectedly crashed</string>
+    <string name="error_fatal">Minecraft Launcher has unexpectedly crashed</string>
     <string name="error_no_version">No version!</string>
     <string name="error_show_more">Show more</string>
     <string name="error_show_less">Show less</string>
@@ -313,7 +313,7 @@
     <string name="cs_navtip_settings">Settings</string>
 
     <!-- ── Launch screen: black stage + optional user GIF (video removed) ── -->
-    <string name="cs_about_title">About CS LAUNCHER PLUS</string>
+    <string name="cs_about_title">About Minecraft Launcher</string>
     <string name="cs_launch_color_set">Launch color set</string>
     <string name="cs_launch_color_reset">Launch color reset to black</string>
     <string name="cs_about_name">CS LAUNCHER PLUS</string>
